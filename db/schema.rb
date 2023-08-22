@@ -31,6 +31,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_21_103444) do
     t.index ["user_id"], name: "index_task_comments_on_user_id"
   end
 
+  create_table "task_task_categories", force: :cascade do |t|
+    t.bigint "task_id", null: false
+    t.bigint "task_category_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["task_category_id"], name: "index_task_task_categories_on_task_category_id"
+    t.index ["task_id"], name: "index_task_task_categories_on_task_id"
+  end
+
   create_table "tasks", force: :cascade do |t|
     t.string "title"
     t.string "description"
@@ -43,15 +52,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_21_103444) do
     t.datetime "updated_at", null: false
     t.index ["assignee_user_id"], name: "index_tasks_on_assignee_user_id"
     t.index ["assigner_user_id"], name: "index_tasks_on_assigner_user_id"
-  end
-
-  create_table "tasks_task_categories", force: :cascade do |t|
-    t.bigint "tasks_id", null: false
-    t.bigint "task_category_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["task_category_id"], name: "index_tasks_task_categories_on_task_category_id"
-    t.index ["tasks_id"], name: "index_tasks_task_categories_on_tasks_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -67,8 +67,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_21_103444) do
 
   add_foreign_key "task_comments", "tasks"
   add_foreign_key "task_comments", "users"
+  add_foreign_key "task_task_categories", "task_categories"
+  add_foreign_key "task_task_categories", "tasks"
   add_foreign_key "tasks", "users", column: "assignee_user_id"
   add_foreign_key "tasks", "users", column: "assigner_user_id"
-  add_foreign_key "tasks_task_categories", "task_categories"
-  add_foreign_key "tasks_task_categories", "tasks", column: "tasks_id"
 end

@@ -3,5 +3,6 @@ class Task < ApplicationRecord
   belongs_to :user, foreign_key: 'assignee_user_id'
   belongs_to :user, foreign_key: 'assigner_user_id'
   has_many :task_comments
-  has_and_belongs_to_many :task_category
+  has_many :task_task_categories
+  has_many :task_categories, through: :task_task_categories
 end
