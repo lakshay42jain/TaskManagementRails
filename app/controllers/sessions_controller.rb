@@ -4,8 +4,6 @@ class SessionsController < ApplicationController
   def login
     user = User.find_by(email: params[:email])
     if user&.authenticate(params[:password])
-      user.auth_token = SecureRandom.hex(32)
-      user.save
       render json: { message: 'Logged in successfully!', token: user.auth_token }
     else
       render json: { error: 'Invalid email or password' }, status: :unauthorized
