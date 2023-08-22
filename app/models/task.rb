@@ -5,4 +5,12 @@ class Task < ApplicationRecord
   has_many :task_comments
   has_many :task_task_categories
   has_many :task_categories, through: :task_task_categories
+
+  validates :title, presence: true
+  validates :description, presence: true
+  validates :due_date, presence: true
+  validates :priority, presence: true
+  validates :status, presence: true
+  validates :assignee_user_id, presence: true
+  validates :assigner_user_id, presence: true
 end
