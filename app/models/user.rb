@@ -6,6 +6,9 @@ class User < ApplicationRecord
   validates :email, presence: true
   validates :phone_number, presence: true
   validates :name, presence: true
-  validates :password, presence: true
+  # validates :password, presence: true
   validates :active, inclusion: { in: [true, false] }
+
+  has_secure_password
+  # has_secure_token 
 end
