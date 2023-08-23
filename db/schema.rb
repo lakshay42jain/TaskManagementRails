@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_21_083754) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_21_103444) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "task_categories", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -19,13 +22,22 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_21_083754) do
   end
 
   create_table "task_comments", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "task_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "task_id", null: false
     t.string "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["task_id"], name: "index_task_comments_on_task_id"
     t.index ["user_id"], name: "index_task_comments_on_user_id"
+  end
+
+  create_table "task_task_categories", force: :cascade do |t|
+    t.bigint "task_id", null: false
+    t.bigint "task_category_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["task_category_id"], name: "index_task_task_categories_on_task_category_id"
+    t.index ["task_id"], name: "index_task_task_categories_on_task_id"
   end
 
   create_table "tasks", force: :cascade do |t|
@@ -34,21 +46,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_21_083754) do
     t.date "due_date"
     t.integer "priority"
     t.integer "status"
-    t.integer "assignee_user_id", null: false
-    t.integer "assigned_user_id", null: false
+    t.bigint "assignee_user_id", null: false
+    t.bigint "assigner_user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["assigned_user_id"], name: "index_tasks_on_assigned_user_id"
     t.index ["assignee_user_id"], name: "index_tasks_on_assignee_user_id"
-  end
-
-  create_table "tasks_task_categories", force: :cascade do |t|
-    t.integer "tasks_id", null: false
-    t.integer "task_category_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["task_category_id"], name: "index_tasks_task_categories_on_task_category_id"
-    t.index ["tasks_id"], name: "index_tasks_task_categories_on_tasks_id"
+    t.index ["assigner_user_id"], name: "index_tasks_on_assigner_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -64,8 +67,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_21_083754) do
 
   add_foreign_key "task_comments", "tasks"
   add_foreign_key "task_comments", "users"
-  add_foreign_key "tasks", "assigned_users"
-  add_foreign_key "tasks", "assignee_users"
-  add_foreign_key "tasks_task_categories", "task_categories"
-  add_foreign_key "tasks_task_categories", "tasks", column: "tasks_id"
+  add_foreign_key "task_task_categories", "task_categories"
+  add_foreign_key "task_task_categories", "tasks"
+  add_foreign_key "tasks", "users", column: "assignee_user_id"
+  add_foreign_key "tasks", "users", column: "assigner_user_id"
 end
