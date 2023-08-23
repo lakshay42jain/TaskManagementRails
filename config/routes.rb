@@ -5,5 +5,6 @@ Rails.application.routes.draw do
   post 'deactivate_user' => "users#deactivate_user"
 
   post 'create_task' => "task#create"
+  get 'all_users' => "users#all_users"
   
 end
