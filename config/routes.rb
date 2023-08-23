@@ -1,10 +1,10 @@
 Rails.application.routes.draw do
-  post 'signup' => "users#signup"
+  post 'register' => "users#signup"
   post 'login' => "sessions#login"
   delete 'logout' => "sessions#logout"
-  post 'deactivate_user' => "users#deactivate_user"
+  post 'admin/deactivate_user' => "users#deactivate_user"
 
-  post 'create_task' => "task#create"
-  get 'all_users' => "users#all_users"
+  post 'admin/create_task' => "task#create"
+  get 'admin/all_users' => "users#all_users"
   
 end
