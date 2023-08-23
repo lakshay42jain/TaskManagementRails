@@ -6,12 +6,12 @@ class UserService
       if user_want_to_delete
         user_want_to_delete.active = false
         user_want_to_delete.save
-        return { status: :ok }
+        { status: :ok }
       else  
-        return { message: "User Not Found" }
+        { message: 'User Not Found' }
       end
     else 
-      return { message: "Only Admin can deactivate the user" }
+      { message: 'Only Admin can deactivate the user' }
     end  
   end
 end

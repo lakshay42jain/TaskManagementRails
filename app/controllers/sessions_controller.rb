@@ -4,7 +4,11 @@ class SessionsController < ApplicationController
   def login
     user = User.find_by(email: params[:email])
     if user&.authenticate(params[:password])
-      render json: { message: 'Logged in successfully!', token: user.auth_token }
+      if user.active == true
+        render json: { message: 'Logged in successfully!', token: user.auth_token }
+      else
+        render json: { message: 'User Deactivated By Admin' }, status: :unauthorized
+      end
     else
       render json: { error: 'Invalid email or password' }, status: :unauthorized
     end

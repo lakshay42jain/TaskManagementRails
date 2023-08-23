@@ -3,4 +3,7 @@ Rails.application.routes.draw do
   post 'login' => "sessions#login"
   delete 'logout' => "sessions#logout"
   post 'deactivate_user' => "users#deactivate_user"
+
+  post 'create_task' => "task#create"
+  
 end
