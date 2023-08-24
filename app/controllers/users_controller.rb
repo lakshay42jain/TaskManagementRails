@@ -2,16 +2,14 @@ class UsersController < ApplicationController
   skip_before_action :authenticate_user, except: [:deactivate_user, :all_users] 
   before_action :require_admin, only: [:deactivate_user, :all_users]
 
-  
-
   def deactivate_user
     email = params[:email]
-    user_service = UserService.new
-    result = user_service.deactivate_user(email)
-    if result[:status] == :ok
-      render json: { message: 'User Successfully Deactivated' }, status: 200
+    result = UserService.new
+    result.deactivate_user(email)
+    if result.errors.present?
+      render json: { error: result.errors },status: unprocessable_entity
     else
-      render json: { error: result[:message] }, status: :unprocessable_entity
+      render json: { message: "User Deactivated Successfully" }, status: :created
     end
   end
 

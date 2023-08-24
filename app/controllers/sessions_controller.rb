@@ -26,14 +26,4 @@ class SessionsController < ApplicationController
   def user_params
     params.require(:user).permit(:email, :phone_number, :name, :role, :password, :active)
   end
-  # def logout
-  #   auth_token = request.headers['Authorization']
-  #   user = User.find_by(auth_token: auth_token)
-  #   if user
-  #     user.update(auth_token: nil)
-  #     render json: { message: 'Logged out' }
-  #   else
-  #     render json: { error: 'Invalid token' }, status: :unauthorized
-  #   end
-  # end
 end
