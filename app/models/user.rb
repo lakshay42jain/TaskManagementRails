@@ -10,8 +10,7 @@ class User < ApplicationRecord
 
   validates_presence_of :name, :password
   validates :phone_number, presence: true, length: { is: 10 }
-  validates :email, presence: true, uniqueness: true, format: { with: /\A[^@\s]+@[^@\s]+\z/ }
-  validates :active, inclusion: { in: [true, false] }
+  validates :email, presence: true, uniqueness: true, format: { with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i }
 
   private
   def generate_auth_token
