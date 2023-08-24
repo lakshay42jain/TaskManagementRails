@@ -7,28 +7,25 @@ class UsersController < ApplicationController
     result = UserService.new
     result.deactivate_user(email)
     if result.errors.present?
-      render json: { error: result.errors },status: unprocessable_entity
+      render json: { error: result.errors }, status: unprocessable_entity
     else
-      render json: { message: "User Deactivated Successfully" }, status: :created
+      render json: { message: 'User Deactivated Successfully' }, status: :created
     end
   end
 
   def all_users
-    user_service = UserService.new
-    result = user_service.find_all
-    render json: result
-    # if result[:status] == :ok
-    #   render json: { data: result }, status: 200
-    # else
-    #   render json: { error: result[:message] }, status: :unprocessable_entity
-    # end
+    result = UserService.new
+    users = user_service.find_all
+    if result.errors.present?
+      render json: { error: result.errors }, status: unprocessable_entity
+    elsif users.blank?
+      render json: { message: 'Users List is Empty' }, status: :ok  
+    else
+      render json: result, status: :ok
+    end
   end
 
-  private
-
-  
-
-  def require_admin
+  private def require_admin
     unless current_user.admin?
       render json: { error: 'Unauthorized' }, status: :unauthorized
     end

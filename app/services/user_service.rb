@@ -12,11 +12,4 @@ class UserService
 
   def find_all
     users = User.all
-    # if users.empty?
-    #   { message: 'Users not found' }
-    # else
-    #   { status: :ok }
-    #   users
-    # end  
-  end
 end
