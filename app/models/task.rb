@@ -8,5 +8,27 @@ class Task < ApplicationRecord
   has_many :task_task_categories, dependent: :destroy
   has_many :task_categories, through: :task_task_categories
 
-  validates_presence_of :title, :description, :due_date, :priority, :status, :assignee_user_id, :assigner_user_id
+  validate :admin_validate
+  validate :status_validate, on: :create
+  validates_presence_of :title, :description, :due_date, :priority, :status
+
+  before_create :assign_task_category
+
+  private def admin_validate
+    unless assigner_user.admin?
+      self.errors[:base] << "Only admin can create the task"
+      throw(abort)
+    end
+  end
+
+  private def status_validate
+    if completed?
+      self.errors[:base] << "New tasks cannot be created with status completed"
+      throw(abort)
+    end
+  end
+
+  private def assign_task_category
+    self.task_categories << TaskCategory.find(1)
+  end
 end
