@@ -1,7 +1,7 @@
 class Task < ApplicationRecord
   before_create :assign_task_category
 
-  enum status: { pending: 1, in_progress: 2, completed: 3 }
+  enum status: { pending: 1, in_progress: 2, completed: 3 , deleted: 4}
 
   belongs_to :assignee_user, class_name: 'User'
   belongs_to :assigner_user, class_name: 'User'
@@ -16,15 +16,13 @@ class Task < ApplicationRecord
 
   private def admin_validate
     unless assigner_user.admin?
-      self.errors[:base] << "Only admin can create the task"
-      throw(abort)
+      raise StandardError, 'Only admin can create the task'
     end
   end
 
   private def status_validate
     if completed?
-      self.errors[:base] << "New tasks cannot be created with status completed"
-      throw(abort)
+      raise StandardError, 'New tasks cannot be created with status completed'
     end
   end
 
