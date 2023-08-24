@@ -2,14 +2,7 @@ class UsersController < ApplicationController
   skip_before_action :authenticate_user, except: [:deactivate_user, :all_users] 
   before_action :require_admin, only: [:deactivate_user, :all_users]
 
-  def signup
-    user = User.create(user_params)
-    if user.errors.blank?
-      render json: { token: user.auth_token }, status: :created
-    else
-      render json: { error: user.errors.full_messages }, status: :unprocessable_entity
-    end
-  end
+  
 
   def deactivate_user
     email = params[:email]
@@ -35,9 +28,7 @@ class UsersController < ApplicationController
 
   private
 
-  def user_params
-    params.require(:user).permit(:email, :phone_number, :name, :role, :password, :active)
-  end
+  
 
   def require_admin
     unless current_user.admin?
