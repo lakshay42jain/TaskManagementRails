@@ -1,15 +1,13 @@
 class TaskService
+  attr_accessor :errors
+
   def create(user, task_params)
-    if user&.role == 'admin'
       task = Task.new(task_params)
       task.assigner_user_id = user.id 
       if task.save
-        { status: :ok }
+        task 
       else
-        { error: task.errors.full_messages }
-      end 
-    else
-      { message: 'Only Admin can Assign the Task' }
-    end
+        self.errors = task.errors.full_messages
+      end
   end
 end

@@ -1,15 +1,11 @@
 class TaskController < ApplicationController
-  skip_before_action :verify_authenticity_token
-  
   def create
-    auth_token = request.headers['Authorization']
-    user = User.find_by(auth_token: auth_token)
     task_service = TaskService.new
-    result = task_service.create(user, task_params)
-    if result[:status] == :ok
-      render json: { message: 'Task Assigned Successfully' }, status: 200
+    result = task_service.create(current_user, task_params)
+    if result.errors.present?
+      render json: { error: result.errors }, status: unprocessable_entity
     else
-      render json: result, status: :unprocessable_entity
+      render json: { message: 'Task Assigned Successfully' }, status: 200
     end
   end
 
