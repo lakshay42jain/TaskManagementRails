@@ -1,4 +1,6 @@
 class Task < ApplicationRecord
+  before_create :assign_task_category
+
   enum status: { pending: 1, in_progress: 2, completed: 3 }
 
   belongs_to :assignee_user, class_name: 'User'
@@ -11,8 +13,6 @@ class Task < ApplicationRecord
   validate :admin_validate
   validate :status_validate, on: :create
   validates_presence_of :title, :description, :due_date, :priority, :status
-
-  before_create :assign_task_category
 
   private def admin_validate
     unless assigner_user.admin?
