@@ -17,4 +17,5 @@ class User < ApplicationRecord
   def generate_auth_token
     self.auth_token = SecureRandom.hex(32)
   end
+  
 end
