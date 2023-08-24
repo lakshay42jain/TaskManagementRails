@@ -21,7 +21,7 @@ class UsersController < ApplicationController
     elsif users.blank?
       render json: { message: 'Users List is Empty' }, status: :ok  
     else
-      render json: result, status: :ok
+      render json: result, status: :ok err
     end
   end
 
