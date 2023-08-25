@@ -11,18 +11,22 @@ Rails.application.routes.draw do
       resources :users, only: [:index] do 
         collection do 
           post :deactivate
+          get :tasks
         end
       end
     
-      resources :task, only: [:create, :index] do 
+      resources :task, only: [:create, :index, :update] do 
         collection do 
           post :delete 
+          put :update_status
         end
       end
       
       resources :task_category, only: [:index] do 
+        collection do 
+          delete :delete
+        end
       end
-
     end
   end
   

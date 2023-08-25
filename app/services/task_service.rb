@@ -24,4 +24,22 @@ class TaskService
   def find_all
     tasks = Task.all 
   end
+
+  def update(id, task_params)
+    begin
+      task = Task.find(id)
+      task.update(task_params)
+    rescue ActiveRecord::RecordNotFound => error
+      self.errors = error
+    end
+  end
+
+  def update_status(current_user, id, new_status)
+    task = current_user.tasks.find_by(id: id)
+    if task
+      task.update(status: new_status)
+    else
+      self.errors = 'Task Not Found'
+    end
+  end
 end

@@ -1,5 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-  skip_before_action :authenticate_user, except: [:deactivate, :index] 
+  skip_before_action :authenticate_user, except: [:deactivate, :index, :tasks] 
   before_action :require_admin, only: [:deactivate, :index]
 
   def deactivate
@@ -28,6 +28,18 @@ class Api::V1::UsersController < ApplicationController
   private def require_admin
     unless current_user.admin?
       render json: { error: 'Unauthorized' }, status: :unauthorized
+    end
+  end
+
+  def tasks 
+    service = UserService.new
+    all_tasks = service.tasks(current_user)
+    if service.errors.present?
+      render json: { error: service.errors }, status: :unprocessable_entity
+    elsif all_tasks.blank?
+      render json: { message: 'No Pending Task' }, status: :ok 
+    else
+      render json: all_tasks, status: :ok
     end
   end
 end

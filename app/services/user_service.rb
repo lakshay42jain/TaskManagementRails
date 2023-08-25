@@ -13,4 +13,9 @@ class UserService
   def find_all
     users = User.all
   end
+
+  def tasks(current_user)
+    all_tasks = current_user.tasks.where.not(status: [3, 4])
+  end
+  
 end
