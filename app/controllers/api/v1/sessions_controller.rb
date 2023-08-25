@@ -1,7 +1,7 @@
-class SessionsController < ApplicationController
+class Api::V1::SessionsController < ApplicationController
   skip_before_action :authenticate_user 
   
-  def signup
+  def create
     user = User.create(user_params)
     if user.errors.blank?
       render json: { token: user.auth_token }, status: :created

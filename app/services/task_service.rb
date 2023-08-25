@@ -20,4 +20,8 @@ class TaskService
       self.errors = error
     end
   end
+
+  def find_all
+    tasks = Task.all 
+  end
 end
