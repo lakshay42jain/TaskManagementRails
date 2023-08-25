@@ -15,6 +15,7 @@ Rails.application.routes.draw do
         collection do 
           post :delete 
           put :update_status
+          post :show_all_by_sort
         end
       end
       

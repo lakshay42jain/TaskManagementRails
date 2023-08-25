@@ -1,5 +1,5 @@
 class Api::V1::TaskController < ApplicationController
-  before_action :require_admin, only: [:index, :delete, :update]
+  before_action :require_admin, only: [:index, :delete, :update, :show_all_by_sort]
 
   def create
     service = TaskService.new
@@ -23,7 +23,19 @@ class Api::V1::TaskController < ApplicationController
 
   def index 
     service = TaskService.new
-    tasks = service.find_all
+    tasks = service.show_all_by_sort(params[:id])
+    if service.errors.present?
+      render json: { error: service.errors }, status: :unprocessable_entity
+    elsif tasks.blank?
+      render json: { message: 'Tasks List is Empty' }, status: :ok
+    else
+      render json: tasks, status: :ok
+    end
+  end
+
+  def show_all_by_sort
+    service = TaskService.new
+    tasks = service.show_all_by_sort(params[:field])
     if service.errors.present?
       render json: { error: service.errors }, status: :unprocessable_entity
     elsif tasks.blank?

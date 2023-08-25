@@ -25,6 +25,19 @@ class TaskService
     tasks = Task.all 
   end
 
+  def show_all_by_sort(field)
+    case field
+    when "due_date"
+      tasks = Task.order(due_date: :asc)
+    when "creation_date"
+      tasks = Task.order(created_at: :desc)
+    when "priority"
+      tasks = Task.order(priority: :asc)
+    else
+      tasks = Task.order(due_date: :asc)
+    end
+  end
+
   def update(id, task_params)
     begin
       task = Task.find(id)
