@@ -17,15 +17,15 @@ class Task < ApplicationRecord
 
   private def admin_validate
     unless assigner_user.admin?
-      self.errors[:base] << "Only admin can create the task"
-      throw(abort)
+      self.errors[:base] << 'Only admin can create the task'
+      raise StandardError, 'Only admin can create the task'
     end
   end
 
   private def status_validate
     if completed?
-      self.errors[:base] << "New tasks cannot be created with status completed"
-      throw(abort)
+      self.errors[:base] << 'New tasks cannot be created with status completed'
+      raise StandardError, 'New tasks cannot be created with status completed'
     end
   end
 
