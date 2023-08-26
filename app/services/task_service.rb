@@ -11,9 +11,10 @@ class TaskService
     end
   end
 
-  def delete(user, task_id)
+  def delete(task_id)
     begin
       task = Task.find(task_id)
+      return self.errors = 'Already deleted' if task.deleted?
       task.status = 'deleted'
       task.save!
     rescue ActiveRecord::RecordNotFound => error
@@ -52,7 +53,16 @@ class TaskService
     if task
       task.update(status: new_status)
     else
-      self.errors = 'Task Not Found'
+      self.errors = 'Task not found'
+    end
+  end
+
+  def find_by_category(name)
+    task_category = TaskCategory.find_by(name: name)
+    if task_category
+      tasks = task_category.tasks
+    else
+      self.errors = 'No task catgory exists with this name'
     end
   end
 end

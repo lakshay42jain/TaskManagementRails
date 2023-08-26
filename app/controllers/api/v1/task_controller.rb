@@ -1,5 +1,5 @@
 class Api::V1::TaskController < ApplicationController
-  before_action :require_admin, only: [:index, :delete, :update, :show_all_by_sort]
+  before_action :require_admin, only: [:index, :delete, :update, :show_all_by_sort, :find_by_category]
 
   def create
     service = TaskService.new
@@ -13,7 +13,7 @@ class Api::V1::TaskController < ApplicationController
 
   def delete
     service = TaskService.new
-    result = service.delete(current_user, params[:id])
+    result = service.delete(params[:id])
     if service.errors.present?
       render json: { error: service.errors }, status: :unprocessable_entity
     else
@@ -23,7 +23,7 @@ class Api::V1::TaskController < ApplicationController
 
   def index 
     service = TaskService.new
-    tasks = service.show_all_by_sort(params[:id])
+    tasks = service.find_all
     if service.errors.present?
       render json: { error: service.errors }, status: :unprocessable_entity
     elsif tasks.blank?
@@ -62,6 +62,18 @@ class Api::V1::TaskController < ApplicationController
       render json: { error: service.errors }, status: :unprocessable_entity
     else
       render json: { message: 'Status Updated' }, status: 200
+    end
+  end
+
+  def find_by_category
+    service = TaskService.new
+    tasks = service.find_by_category(params[:name])
+    if service.errors.present?
+      render json: { error: service.errors }, status: :unprocessable_entity
+    elsif tasks.blank?
+      render json: { message: 'No task found in this category' }, status: :ok  
+    else
+      render json: tasks, status: :ok
     end
   end
 

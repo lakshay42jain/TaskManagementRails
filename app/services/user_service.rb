@@ -4,9 +4,10 @@ class UserService
   def deactivate_user(email)
     user_want_to_delete = User.find_by(email: email)
     if user_want_to_delete  
-      user_want_to_delete.update!(active: false)
+      return self.errors = 'User already deactivated' unless user_want_to_delete.active
+      user_want_to_delete.update(active: false)
     else  
-      self.errors = 'User Not Found'
+      self.errors = 'User not found'
     end  
   end
 
@@ -17,5 +18,4 @@ class UserService
   def tasks(current_user)
     all_tasks = current_user.tasks.where.not(status: [3, 4])
   end
-  
 end

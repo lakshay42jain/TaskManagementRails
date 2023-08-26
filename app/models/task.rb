@@ -34,6 +34,7 @@ class Task < ApplicationRecord
 
   private def due_date_format_and_range
     begin
+      puts due_date 
       parsed_date = Date.parse(due_date.to_s)
       valid_range = parsed_date >= Date.today
       unless valid_range
