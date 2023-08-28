@@ -9,7 +9,7 @@ class Api::V1::TaskCategoryController < ApplicationController
     elsif list_all.blank?
       render json: { message: 'Task Category List is Empty' }, status: :ok  
     else
-      render json: list_all, status: :ok
+      render json: list_all, each_serializer: TaskCategorySerializer, status: :ok
     end
   end
 

@@ -29,7 +29,7 @@ class Api::V1::TaskController < ApplicationController
     elsif tasks.blank?
       render json: { message: 'Tasks List is Empty' }, status: :ok
     else
-      render json: tasks, status: :ok
+      render json: tasks, each_serializer: TaskSerializer, status: :ok
     end
   end
 
@@ -41,7 +41,7 @@ class Api::V1::TaskController < ApplicationController
     elsif tasks.blank?
       render json: { message: 'Tasks List is Empty' }, status: :ok  
     else
-      render json: tasks, status: :ok
+      render json: tasks, each_serializer: TaskSerializer, status: :ok
     end
   end
 
@@ -73,7 +73,7 @@ class Api::V1::TaskController < ApplicationController
     elsif tasks.blank?
       render json: { message: 'No task found in this category' }, status: :ok  
     else
-      render json: tasks, status: :ok
+      render json: tasks, each_serializer: TaskSerializer, status: :ok
     end
   end
 

@@ -21,7 +21,7 @@ class Api::V1::UsersController < ApplicationController
     elsif users.blank?
       render json: { message: 'Users List is Empty' }, status: :ok  
     else
-      render json: users, status: :ok
+      render json: users, each_serializer: UserSerializer, status: :ok
     end
   end
 
@@ -39,7 +39,7 @@ class Api::V1::UsersController < ApplicationController
     elsif all_tasks.blank?
       render json: { message: 'No Pending Task' }, status: :ok 
     else
-      render json: all_tasks, status: :ok
+      render json: all_tasks, each_serializer: TaskSerializer, status: :ok
     end
   end
 end

@@ -8,6 +8,10 @@ gem "rails", "~> 7.0.6"
 
 # Use Postgresql as the database for Active Record
 gem "pg"
+
+#For Serialization
+gem 'active_model_serializers'
+
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 
