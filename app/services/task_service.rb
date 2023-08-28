@@ -22,12 +22,16 @@ class TaskService
     end
   end
 
-  def find_all
-    tasks = Task.all 
+  def find_all(current_user)
+    if current_user.admin?
+      tasks = Task.all
+    else    
+      tasks = Task.where(assignee_user_id: current_user.id, status: [1, 2])
+    end
   end
 
   def show_all_by_sort(field)
-    case field
+    case field 
     when "due_date"
       tasks = Task.order(due_date: :asc)
     when "creation_date"

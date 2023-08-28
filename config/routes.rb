@@ -20,7 +20,7 @@ Rails.application.routes.draw do
         end
       end
       
-      resources :task_category, only: [:index, :update] do 
+      resources :task_category, only: [:index, :update, :create] do 
         collection do 
           delete :delete
         end

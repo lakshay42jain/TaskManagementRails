@@ -1,5 +1,5 @@
 class Api::V1::TaskController < ApplicationController
-  before_action :require_admin, only: [:index, :delete, :update, :show_all_by_sort, :find_by_category]
+  before_action :require_admin, only: [:delete, :update, :show_all_by_sort, :find_by_category]
 
   def create
     service = TaskService.new
@@ -23,7 +23,7 @@ class Api::V1::TaskController < ApplicationController
 
   def index 
     service = TaskService.new
-    tasks = service.find_all
+    tasks = service.find_all(current_user)
     if service.errors.present?
       render json: { error: service.errors }, status: :unprocessable_entity
     elsif tasks.blank?
