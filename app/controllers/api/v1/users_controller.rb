@@ -12,22 +12,18 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def login
-    user = User.find_by(email: params[:email])
-    if user&.authenticate(params[:password])
-      if user.active == true
-        render json: { success: true, message: 'Logged in successfully!', token: user.auth_token }
-      else
-        render json: { success: false, message: 'User Deactivated By Admin' }, status: :unauthorized
-      end
-    else
-      render json: { success: false, error: 'Invalid email or password' }, status: :unauthorized
+    service = UserService.new 
+    service.login(params[:email], params[:password])
+    if service.errors.present? 
+      render json: { success: false, errors: service.errors }, status: :unauthorized
+    else 
+      render json: { success: true, message: 'Logged in successfully!' }, status: :ok
     end
   end
 
   def deactivate
-    email = params[:email]
     service = UserService.new
-    service.deactivate_user(email)
+    service.deactivate_user(params[:email])
     if service.errors.present?
       render json: { success: false, error: service.errors }, status: :unprocessable_entity
     else
