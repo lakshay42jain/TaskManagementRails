@@ -22,12 +22,10 @@ class UserService
         self.errors = 'user deactivated by admin'
         return 
       end
-      user
     else
       self.errors = 'Invalid email and password'
     end 
   end
-
 
   def find_all
     User.all.to_a
