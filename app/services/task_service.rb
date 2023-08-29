@@ -16,7 +16,7 @@ class TaskService
     if task && task.deleted?
       self.errors = 'Already deleted' 
     elsif task
-      unless task.deleted! 
+      unless task.deleted!
         self.errors = 'Task not deleted'
       end
     else
@@ -47,7 +47,7 @@ class TaskService
   def update(id, task_params)
     task = Task.find_by(id: id)
     if task
-      unless task.update!(task_params)
+      unless task.update(task_params)
         self.errors = 'Task not updated'
       end
     else 
@@ -58,7 +58,7 @@ class TaskService
   def update_status(current_user, id, new_status)
     task = current_user.tasks.find_by(id: id)
     if task
-      unless task.update!(status: new_status)
+      unless task.update(status: new_status)
         self.errors = 'Task status not updated'
       end
     else
