@@ -12,14 +12,14 @@ class TaskService
   end
 
   def delete(task_id)
-    begin
-      task = Task.find(task_id)
-      if task.deleted?
-        self.errors = 'Already deleted' 
-        return 
+    task = Task.find_by(id: task_id)
+    if task && task.deleted?
+      self.errors = 'Already deleted' 
+    elsif task
+      unless task.deleted! 
+        self.errors = 'Task not deleted'
       end
-      task.deleted!
-    rescue ActiveRecord::RecordNotFound => error
+    else
       self.errors = 'Task Not Exist'
     end
   end
@@ -41,21 +41,26 @@ class TaskService
     else
       tasks = tasks.order(due_date: :asc)
     end
+    tasks.to_a
   end
 
   def update(id, task_params)
-    begin
-      task = Task.find(id)
-      task.update(task_params)
-    rescue ActiveRecord::RecordNotFound => error
-      self.errors = error
-    end
+    task = Task.find_by(id: id)
+    if task
+      unless task.update!(task_params)
+        self.errors = 'Task not updated'
+      end
+    else 
+      self.errors = 'Task not found'
+    end 
   end
 
   def update_status(current_user, id, new_status)
     task = current_user.tasks.find_by(id: id)
     if task
-      task.update(status: new_status)
+      unless task.update!(status: new_status)
+        self.errors = 'Task status not updated'
+      end
     else
       self.errors = 'Task not found'
     end
@@ -64,7 +69,7 @@ class TaskService
   def find_by_category(name)
     task_category = TaskCategory.find_by(name: name)
     if task_category
-      tasks = task_category.tasks
+      task_category.tasks.to_a
     else
       self.errors = 'No task catgory exists with this name'
     end

@@ -3,9 +3,9 @@ class Api::V1::TaskCommentsController < ApplicationController
     service = TaskCommentService.new
     service.create(comment_params)
     if service.errors.present?
-      render json: { error: service.errors }, status: :unprocessable_entity
+      render json: { success: false, error: service.errors }, status: :unprocessable_entity
     else
-      render json: { message: 'Comment successfully added' }, status: :created
+      render json: { success: true, message: 'Comment successfully added' }, status: :created
     end
   end
 

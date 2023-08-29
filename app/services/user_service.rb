@@ -14,6 +14,6 @@ class UserService
   end
 
   def find_all
-    User.all
+    User.all.to_a
   end
 end

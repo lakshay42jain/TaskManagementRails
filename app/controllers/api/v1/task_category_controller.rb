@@ -5,11 +5,9 @@ class Api::V1::TaskCategoryController < ApplicationController
     service = TaskCategoryService.new
     list_all = service.find_all
     if service.errors.present?
-      render json: { error: service.errors }, status: :unprocessable_entity
-    elsif list_all.blank?
-      render json: { message: 'Task Category List is Empty' }, status: :ok  
+      render json: { success: false, error: service.errors }, status: :unprocessable_entity
     else
-      render json: list_all, each_serializer: TaskCategorySerializer, status: :ok
+      render json: { success: true, data: list_all.map { |category| TaskCategorySerializer.new(category) } }, status: :ok
     end
   end
 
@@ -17,9 +15,9 @@ class Api::V1::TaskCategoryController < ApplicationController
     service = TaskCategoryService.new 
     service.delete_all(params[:name])
     if service.errors.present?
-      render json: { error: service.errors }, status: :unprocessable_entity
+      render json: { success: false, error: service.errors }, status: :unprocessable_entity
     else
-      render json: { message: 'Task Category Successfully Deleted' }, status: :created
+      render json: { success: true, message: 'Task Category Successfully Deleted' }, status: :created
     end
   end
 
@@ -27,9 +25,9 @@ class Api::V1::TaskCategoryController < ApplicationController
     service = TaskCategoryService.new
     service.update(params[:id], category_params)
     if service.errors.present?
-      render json: { error: service.errors }, status: :unprocessable_entity
+      render json: { success: false, error: service.errors }, status: :unprocessable_entity
     else
-      render json: { message: 'Task Category Successfully Updated' }, status: :created
+      render json: { success: true, message: 'Task Category Successfully Updated' }, status: :created
     end
   end
 
@@ -37,9 +35,9 @@ class Api::V1::TaskCategoryController < ApplicationController
     service = TaskCategoryService.new 
     service.create(category_params)
     if service.errors.present? 
-      render json: { error: service.errors }, status: :unprocessable_entity
+      render json: { success: false, error: service.errors }, status: :unprocessable_entity
     else
-      render json: { message: 'Task Category Successfully Created' }, status: :created
+      render json: { success: true, message: 'Task Category Successfully Created' }, status: :created
     end
   end
 
@@ -49,7 +47,7 @@ class Api::V1::TaskCategoryController < ApplicationController
 
   private def require_admin
     unless current_user.admin?
-      render json: { error: 'Unauthorized' }, status: :unauthorized
+      render json: { success: false, error: 'Unauthorized' }, status: :unauthorized
     end
   end
 end

@@ -5,9 +5,9 @@ class Api::V1::UsersController < ApplicationController
   def create
     user = User.create(user_params)
     if user.errors.blank?
-      render json: { token: user.auth_token }, status: :created
+      render json: { success: true, token: user.auth_token }, status: :created
     else
-      render json: { error: user.errors.full_messages }, status: :unprocessable_entity
+      render json: { success: false, error: user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -15,23 +15,23 @@ class Api::V1::UsersController < ApplicationController
     user = User.find_by(email: params[:email])
     if user&.authenticate(params[:password])
       if user.active == true
-        render json: { message: 'Logged in successfully!', token: user.auth_token }
+        render json: { success: true, message: 'Logged in successfully!', token: user.auth_token }
       else
-        render json: { message: 'User Deactivated By Admin' }, status: :unauthorized
+        render json: { success: false, message: 'User Deactivated By Admin' }, status: :unauthorized
       end
     else
-      render json: { error: 'Invalid email or password' }, status: :unauthorized
+      render json: { success: false, error: 'Invalid email or password' }, status: :unauthorized
     end
   end
-  
+
   def deactivate
     email = params[:email]
     service = UserService.new
     service.deactivate_user(email)
     if service.errors.present?
-      render json: { error: service.errors }, status: :unprocessable_entity
+      render json: { success: false, error: service.errors }, status: :unprocessable_entity
     else
-      render json: { message: 'User Deactivated Successfully' }, status: :created
+      render json: { success: true, message: 'User Deactivated Successfully' }, status: :created
     end
   end
 
@@ -39,11 +39,9 @@ class Api::V1::UsersController < ApplicationController
     service = UserService.new
     users = service.find_all
     if service.errors.present?
-      render json: { error: service.errors }, status: :unprocessable_entity
-    elsif users.blank?
-      render json: { message: 'Users List is Empty' }, status: :ok  
-    else
-      render json: users, each_serializer: UserSerializer, status: :ok
+      render json: { success: false, error: service.errors }, status: :unprocessable_entity
+    else  
+      render json: { success: true, data: users.map { |user| UserSerializer.new(user) } }, each_serializer: UserSerializer, status: :ok
     end
   end
 
