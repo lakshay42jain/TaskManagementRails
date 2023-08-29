@@ -12,6 +12,8 @@ gem "pg"
 #For Serialization
 gem 'active_model_serializers'
 
+gem 'rspec-rails'
+
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 
