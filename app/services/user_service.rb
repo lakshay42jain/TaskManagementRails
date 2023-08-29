@@ -7,7 +7,7 @@ class UserService
       self.errors = 'User already deactivated'
       return
     elsif user
-      unless user.update!(active: false)
+      unless user.update(active: false)
         self.errors = 'user not deactivated'
       end
     else  

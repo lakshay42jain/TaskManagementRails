@@ -37,7 +37,7 @@ class Api::V1::UsersController < ApplicationController
     if service.errors.present?
       render json: { success: false, error: service.errors }, status: :unprocessable_entity
     else  
-      render json: { success: true, data: users.map { |user| UserSerializer.new(user) } }, each_serializer: UserSerializer, status: :ok
+      render json: { success: true, data: users.map { |user| UserSerializer.new(user) } }, status: :ok
     end
   end
 
