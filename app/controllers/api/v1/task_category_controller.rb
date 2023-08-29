@@ -1,5 +1,5 @@
 class Api::V1::TaskCategoryController < ApplicationController
-  before_action :require_admin, only: [:index, :delete, :update, :create]
+  before_action :require_admin, only: [:delete, :update, :create]
 
   def index 
     service = TaskCategoryService.new
@@ -25,7 +25,7 @@ class Api::V1::TaskCategoryController < ApplicationController
 
   def update
     service = TaskCategoryService.new
-    service.update(params[:id], params[:name], params[:description])
+    service.update(params[:id], category_params)
     if service.errors.present?
       render json: { error: service.errors }, status: :unprocessable_entity
     else
@@ -35,12 +35,16 @@ class Api::V1::TaskCategoryController < ApplicationController
 
   def create 
     service = TaskCategoryService.new 
-    service.create(params[:name], params[:description])
+    service.create(category_params)
     if service.errors.present? 
-      render json: { error: service.errors },status: :unprocessable_entity
+      render json: { error: service.errors }, status: :unprocessable_entity
     else
       render json: { message: 'Task Category Successfully Created' }, status: :created
     end
+  end
+
+  private def category_params
+    params.require(:task_category).permit(:name, :description)
   end
 
   private def require_admin

@@ -6,7 +6,7 @@ class TaskService
       task = Task.new(task_params)
       task.assigner_user_id = user.id 
       task.save!
-    rescue StandardError => error
+    rescue ActiveRecord::RecordInvalid => error
       self.errors = error
     end
   end
@@ -14,32 +14,32 @@ class TaskService
   def delete(task_id)
     begin
       task = Task.find(task_id)
-      return self.errors = 'Already deleted' if task.deleted?
-      task.status = 'deleted'
-      task.save!
+      if task.deleted?
+        self.errors = 'Already deleted' 
+        return 
+      end
+      task.deleted!
     rescue ActiveRecord::RecordNotFound => error
-      self.errors = error
+      self.errors = 'Task Not Exist'
     end
   end
 
-  def find_all(current_user)
+  def find_all(current_user, sort_field)
     if current_user.admin?
       tasks = Task.all
     else    
       tasks = Task.where(assignee_user_id: current_user.id, status: [1, 2])
     end
-  end
 
-  def show_all_by_sort(field)
-    case field 
+    case sort_field 
     when "due_date"
-      tasks = Task.order(due_date: :asc)
+      tasks = tasks.order(due_date: :asc)
     when "creation_date"
-      tasks = Task.order(created_at: :desc)
+      tasks = tasks.order(created_at: :desc)
     when "priority"
-      tasks = Task.order(priority: :asc)
+      tasks = tasks.order(priority: :asc)
     else
-      tasks = Task.order(due_date: :asc)
+      tasks = tasks.order(due_date: :asc)
     end
   end
 
