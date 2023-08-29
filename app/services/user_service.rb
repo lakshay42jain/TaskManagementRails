@@ -2,20 +2,32 @@ class UserService
   attr_accessor :errors
 
   def deactivate_user(email)
-    user_want_to_delete = User.find_by(email: email)
-    if user_want_to_delete  
-      return self.errors = 'User already deactivated' unless user_want_to_delete.active
-      user_want_to_delete.update(active: false)
+    user = User.find_by(email: email)
+    if user && user&.active == false
+      self.errors = 'User already deactivated'
+      return
+    elsif user
+      unless user.update!(active: false)
+        self.errors = 'user not deactivated'
+      end
     else  
       self.errors = 'User not found'
     end  
   end
 
-  def find_all
-    users = User.all
+  def login(email, password)
+    user = User.find_by(email: email)
+    if user&.authenticate(password)
+      unless user.active
+        self.errors = 'user deactivated by admin'
+        return 
+      end
+    else
+      self.errors = 'Invalid email and password'
+    end 
   end
 
-  def tasks(current_user)
-    all_tasks = current_user.tasks.where.not(status: [3, 4])
+  def find_all
+    User.all.to_a
   end
 end

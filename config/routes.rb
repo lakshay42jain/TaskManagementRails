@@ -1,11 +1,9 @@
 Rails.application.routes.draw do
   namespace :api do 
     namespace :v1 do 
-      post 'register' => "sessions#create"
-      post 'login' => "sessions#login"
-
-      resources :users, only: [:index] do 
+      resources :users, only: [:create, :index] do 
         collection do 
+          post :login
           post :deactivate
           get :tasks
         end
@@ -15,12 +13,11 @@ Rails.application.routes.draw do
         collection do 
           post :delete 
           put :update_status
-          post :show_all_by_sort
           post :find_by_category
         end
       end
       
-      resources :task_category, only: [:index, :update, :create] do 
+      resources :task_category, only: [:create, :index, :update] do 
         collection do 
           delete :delete
         end

@@ -6,56 +6,61 @@ class TaskService
       task = Task.new(task_params)
       task.assigner_user_id = user.id 
       task.save!
-    rescue StandardError => error
+    rescue ActiveRecord::RecordInvalid => error
       self.errors = error
     end
   end
 
   def delete(task_id)
-    begin
-      task = Task.find(task_id)
-      return self.errors = 'Already deleted' if task.deleted?
-      task.status = 'deleted'
-      task.save!
-    rescue ActiveRecord::RecordNotFound => error
-      self.errors = error
+    task = Task.find_by(id: task_id)
+    if task && task.deleted?
+      self.errors = 'Already deleted' 
+    elsif task
+      unless task.deleted! 
+        self.errors = 'Task not deleted'
+      end
+    else
+      self.errors = 'Task Not Exist'
     end
   end
 
-  def find_all(current_user)
+  def find_all(current_user, sort_field)
     if current_user.admin?
       tasks = Task.all
     else    
       tasks = Task.where(assignee_user_id: current_user.id, status: [1, 2])
     end
-  end
 
-  def show_all_by_sort(field)
-    case field 
+    case sort_field 
     when "due_date"
-      tasks = Task.order(due_date: :asc)
+      tasks = tasks.order(due_date: :asc)
     when "creation_date"
-      tasks = Task.order(created_at: :desc)
+      tasks = tasks.order(created_at: :desc)
     when "priority"
-      tasks = Task.order(priority: :asc)
+      tasks = tasks.order(priority: :asc)
     else
-      tasks = Task.order(due_date: :asc)
+      tasks = tasks.order(due_date: :asc)
     end
+    tasks.to_a
   end
 
   def update(id, task_params)
-    begin
-      task = Task.find(id)
-      task.update(task_params)
-    rescue ActiveRecord::RecordNotFound => error
-      self.errors = error
-    end
+    task = Task.find_by(id: id)
+    if task
+      unless task.update!(task_params)
+        self.errors = 'Task not updated'
+      end
+    else 
+      self.errors = 'Task not found'
+    end 
   end
 
   def update_status(current_user, id, new_status)
     task = current_user.tasks.find_by(id: id)
     if task
-      task.update(status: new_status)
+      unless task.update!(status: new_status)
+        self.errors = 'Task status not updated'
+      end
     else
       self.errors = 'Task not found'
     end
@@ -64,7 +69,7 @@ class TaskService
   def find_by_category(name)
     task_category = TaskCategory.find_by(name: name)
     if task_category
-      tasks = task_category.tasks
+      task_category.tasks.to_a
     else
       self.errors = 'No task catgory exists with this name'
     end
