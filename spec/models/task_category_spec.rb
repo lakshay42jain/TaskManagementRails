@@ -1,11 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe TaskCategory, type: :model do
+  let(:user) { FactoryBot.create(:user) }
+  let(:admin) { FactoryBot.create(:user, role: 0, email: 'admin@gmail.com') }
+  let(:task) { Task.create(title: 'task', description: 'description', due_date: '20/12/2024', assignee_user_id: user.id, assigner_user_id: admin.id) }
+
   it 'has many tasks through task_task_categories' do
     category = FactoryBot.create(:task_category)
-    user = FactoryBot.create(:user)
-    admin = FactoryBot.create(:user, role: 0, email: 'admin@gmail.com')
-    task = FactoryBot.create(:task, assignee_user_id: user.id, assigner_user_id: admin.id)
     task.categories << category
     expect(category.tasks).to include(task)
   end
