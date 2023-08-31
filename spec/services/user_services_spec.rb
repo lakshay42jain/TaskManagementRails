@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe UserService do
   let(:service) { UserService.new }
   let(:active_user) { FactoryBot.create(:user) } 
-  let(:inactive_user) { FactoryBot.create(:user, active: false) }
+  let(:inactive_user) { FactoryBot.create(:user, active: false, email: 'user1@gmail.com') }
 
   context 'deactivate_user' do
     it 'deactivates an active user' do
@@ -36,6 +36,15 @@ RSpec.describe UserService do
     it 'returns an error if credentials are invalid' do
       service.login(active_user.email, 'wrong_password')
       expect(service.errors).to eq('Invalid email and password')
+    end
+  end
+
+  context 'find_all' do
+    it 'returns a list of all users' do
+      user_1 = FactoryBot.create(:user, email: 'user1@gmail.com')
+      user_2 = FactoryBot.create(:user, email: 'user2@gmail.com')
+      users = service.find_all
+      expect(users).to eq([user_1, user_2])
     end
   end
 end

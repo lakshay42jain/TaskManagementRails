@@ -46,5 +46,4 @@ RSpec.describe Task, type: :model do
     task.categories << category
     expect(task.categories).to include(category)
   end
-
 end

@@ -71,8 +71,8 @@ RSpec.describe TaskService do
     end
   end
 
-  context "when a task category exists" do
-    it "returns tasks associated with the specified category" do
+  context 'when a task category exists' do
+    it 'returns tasks associated with the specified category' do
       FactoryBot.create(:task_task_category, task_id: task_1.id, task_category_id: category.id)
       tasks = service.find_by_category('name')
       expect(tasks).to eq([task_1])
