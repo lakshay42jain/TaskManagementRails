@@ -10,8 +10,9 @@ class TaskCommentService
     end
     
     if current_user.admin? || task.assignee == current_user.id 
-      unless TaskComment.create(user_id: current_user.id, task_id: task.id, body: params[:body])
-        self.errors = 'Task comment not created'
+      task_comment = TaskComment.new(user_id: current_user.id, task_id: task.id, body: params[:body])
+      unless task_comment.save
+        self.errors = task_comment.errors.full_messages.join(", ")
       end
     else
       self.errors = 'You are not assignee of this Task'    

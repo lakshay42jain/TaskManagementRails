@@ -48,22 +48,24 @@ class TaskService
     task = Task.find_by(id: id)
     if task
       unless task.update(task_params)
-        self.errors = 'Task not updated'
+        self.errors = task.errors.full_messages.join(", ")
       end
     else 
       self.errors = 'Task not found'
     end 
+    task if self.errors.blank?
   end
 
   def update_status(current_user, id, new_status)
     task = current_user.tasks.find_by(id: id)
     if task
       unless task.update(status: new_status)
-        self.errors = 'Task status not updated'
+        self.errors = task.errors.full_messages.join(", ")
       end
     else
       self.errors = 'Task not found'
     end
+    task if self.errors.blank?
   end
 
   def find_by_category(name)

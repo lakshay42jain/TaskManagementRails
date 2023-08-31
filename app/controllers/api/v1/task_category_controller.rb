@@ -23,11 +23,11 @@ class Api::V1::TaskCategoryController < ApplicationController
 
   def update
     service = TaskCategoryService.new
-    service.update(params[:id], category_params)
+    category = service.update(params[:id], category_params)
     if service.errors.present?
       render json: { success: false, error: service.errors }, status: :unprocessable_entity
     else
-      render json: { success: true, message: 'Task Category Successfully Updated' }, status: :created
+      render json: { success: true, data: TaskCategorySerializer.new(category), message: 'Task Category Successfully Updated' }, status: :created
     end
   end
 
