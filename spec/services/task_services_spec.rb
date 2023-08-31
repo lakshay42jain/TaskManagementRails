@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe TaskService do
+  let(:service) { TaskService.new }
   let(:user) { FactoryBot.create(:user) }
   let(:admin) { FactoryBot.create(:user, role: 0, email: 'admin@gmail.com') }
   let!(:task_1) { FactoryBot.create(:task, title: 'task1', assignee_user_id: user.id, assigner_user_id: admin.id) }
@@ -10,13 +11,11 @@ RSpec.describe TaskService do
   context 'for creating a task' do
     it 'creates a task with valid attributes' do
       task_params = { title: 'task_demo', description: 'dd', assignee_user_id: user.id, due_date: "23/08/2024" }
-      service = TaskService.new
       expect { service.create(admin, task_params) }.to change(Task, :count).by(1)
     end
 
     it 'handles errors and sets errors attribute' do
       task_params = { title: 'Test Task', description: 'dd', assignee_user_id: 12, due_date: "23/08/2024" } 
-      service = TaskService.new
       service.create(admin, task_params)
       expect(service.errors).to be_an_instance_of(ActiveRecord::RecordInvalid)
     end
@@ -24,13 +23,11 @@ RSpec.describe TaskService do
 
   context 'for deleting a task' do
     it 'marks a task as deleted' do
-      service = TaskService.new
       service.delete(task_1.id)
       expect(task_1.reload).to be_deleted
     end
 
     it 'sets errors if task is not found' do
-      service = TaskService.new
       service.delete(999)
       expect(service.errors).to eq('Task Not Exist')
     end
@@ -39,13 +36,11 @@ RSpec.describe TaskService do
   context 'for updating a task' do
     it 'updates the task with valid parameters' do
       new_task_params = { title: 'Updated Title' }
-      service = TaskService.new
       service.update(task_1.id, new_task_params)
       expect(task_1.reload.title).to eq('Updated Title')
     end
 
     it 'sets errors if task is not found' do
-      service = TaskService.new
       service.update(999, { title: 'New Title' })
       expect(service.errors).to eq('Task not found')
     end
@@ -54,13 +49,11 @@ RSpec.describe TaskService do
   context 'for updating the task status' do
     it 'updates the task status' do
       new_status = 'completed'
-      service = TaskService.new
       service.update_status(user, task_1.id, new_status)
       expect(task_1.reload.status).to eq(new_status)
     end
 
     it 'sets errors' do
-      service = TaskService.new 
       service.update_status(user, 999, 'in_progress')
       expect(service.errors).to eq('Task not found')
     end
@@ -68,13 +61,11 @@ RSpec.describe TaskService do
 
   context 'list all tasks' do
     it 'returns all tasks when user is admin' do
-      service = TaskService.new
       tasks = service.find_all(admin, 'priority')
       expect(tasks).to eq([task_1, task_2])
     end
 
     it 'returns all tasks when user is not admin' do
-      service = TaskService.new
       tasks = service.find_all(user, 'due_date')
       expect(tasks).to eq([task_1, task_2])
     end
@@ -83,7 +74,6 @@ RSpec.describe TaskService do
   context "when a task category exists" do
     it "returns tasks associated with the specified category" do
       FactoryBot.create(:task_task_category, task_id: task_1.id, task_category_id: category.id)
-      service = TaskService.new
       tasks = service.find_by_category('name')
       expect(tasks).to eq([task_1])
     end
