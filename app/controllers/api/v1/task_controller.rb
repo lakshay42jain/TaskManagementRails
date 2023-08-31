@@ -34,21 +34,21 @@ class Api::V1::TaskController < ApplicationController
 
   def update
     service = TaskService.new
-    service.update(params[:id], task_params)
+    task = service.update(params[:id], task_params)
     if service.errors.present?
       render json: { success: false, error: service.errors }, status: :unprocessable_entity
     else
-      render json: { success: true, message: 'Task Updated Successfully' }, status: 200
+      render json: { success: true, data: TaskSerializer.new(task), message: 'Task Updated Successfully' }, status: 200
     end
   end
 
   def update_status
     service = TaskService.new
-    service.update_status(current_user, params[:id], params[:status])
+    task = service.update_status(current_user, params[:id], params[:status])
     if service.errors.present?
       render json: { success: false, error: service.errors }, status: :unprocessable_entity
     else
-      render json: { success: true, message: 'Status Updated' }, status: 200
+      render json: { success: true, data: TaskSerializer.new(task), message: 'Status Updated' }, status: 200
     end
   end
 
@@ -68,7 +68,7 @@ class Api::V1::TaskController < ApplicationController
 
   private def require_admin
     unless current_user.admin?
-      render json: { error: 'Unauthorized' }, status: :unauthorized
+      render json: { success: false, error: 'Unauthorized' }, status: :unauthorized
     end
   end
 end

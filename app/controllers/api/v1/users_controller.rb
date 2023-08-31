@@ -47,7 +47,7 @@ class Api::V1::UsersController < ApplicationController
 
   private def require_admin
     unless current_user.admin?
-      render json: { error: 'Unauthorized' }, status: :unauthorized
+      render json: { success: false, error: 'Unauthorized' }, status: :unauthorized
     end
   end
 end

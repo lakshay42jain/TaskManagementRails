@@ -5,10 +5,9 @@ class UserService
     user = User.find_by(email: email)
     if user && user&.active == false
       self.errors = 'User already deactivated'
-      return
     elsif user
       unless user.update(active: false)
-        self.errors = 'user not deactivated'
+        self.errors = user.errors.full_messages.join(", ")
       end
     else  
       self.errors = 'User not found'
@@ -20,7 +19,6 @@ class UserService
     if user&.authenticate(password)
       unless user.active
         self.errors = 'user deactivated by admin'
-        return 
       end
     else
       self.errors = 'Invalid email and password'
