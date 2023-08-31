@@ -5,14 +5,14 @@ RSpec.describe Api::V1::TaskController, type: :controller do
   let!(:admin) { FactoryBot.create(:user, role: 0, email: 'admin@gmail.com') }
 
   context 'POST Create' do 
-    it 'if user is admin' do 
+    it 'create task if user is admin' do 
       @request.headers['Authorization'] = admin.auth_token
       params = { task: { title: 'title', description: 'description', due_date: Date.today + 7.days, assignee_user_id: user.id, assigner_user_id: admin.id } }
       post :create, params: params
       expect(response).to have_http_status(:ok)
     end
 
-    it 'if user is not admin' do 
+    it 'create task if user is not admin' do 
       @request.headers['Authorization'] = user.auth_token
       params = { task: { title: 'title', description: 'description', due_date: Date.today + 7.days, assignee_user_id: user.id, assigner_user_id: admin.id } }
       post :create, params: params
@@ -51,14 +51,14 @@ RSpec.describe Api::V1::TaskController, type: :controller do
   end
 
   context 'PUT Update' do 
-    it 'if user is admin' do 
+    it 'update task if user is admin' do 
       @request.headers['Authorization'] = admin.auth_token
       params = { task: { title: 'title', description: 'description', due_date: Date.today + 7.days, assignee_user_id: user.id, assigner_user_id: admin.id } }
       post :create, params: params
       expect(response).to have_http_status(:ok)
     end
 
-    it 'if user is not admin' do 
+    it 'update task if user is not admin' do 
       @request.headers['Authorization'] = user.auth_token
       params = { task: { title: 'title', description: 'description', due_date: Date.today + 7.days, assignee_user_id: user.id, assigner_user_id: admin.id } }
       post :create, params: params

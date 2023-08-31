@@ -30,7 +30,7 @@ RSpec.describe Api::V1::TaskCategoryController, type: :controller do
   end
 
   context 'PUT Update' do
-    it 'if user is admin' do
+    it 'update task category if user is admin' do
       @request.headers['Authorization'] = admin.auth_token
       valid_params = { id: category.id, task_category: { name: 'Updated Category', description: 'Updated Desc' } }
       patch :update, params: valid_params
@@ -39,7 +39,7 @@ RSpec.describe Api::V1::TaskCategoryController, type: :controller do
       expect(category.name).to eq('Updated Category')
     end
 
-    it 'if user is not admin' do
+    it 'update task category if user is not admin' do
       @request.headers['Authorization'] = user.auth_token
       valid_params = { id: category.id, task_category: { name: 'Updated Category', description: 'Updated Desc' } }
       patch :update, params: valid_params
@@ -48,14 +48,14 @@ RSpec.describe Api::V1::TaskCategoryController, type: :controller do
   end
 
   context 'POST Create' do
-    it 'if user is admin' do
+    it 'create task category if user is admin' do
       @request.headers['Authorization'] = admin.auth_token
       valid_params = { task_category: { name: 'New Category', description: 'New Desc' } }
       post :create, params: valid_params
       expect(response).to have_http_status(:created)
     end
 
-    it 'if user is not admin' do
+    it 'create task category if user is not admin' do
       @request.headers['Authorization'] = user.auth_token
       valid_params = { task_category: { name: 'New Category', description: 'New Desc' } }
       post :create, params: valid_params
