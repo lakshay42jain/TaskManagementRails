@@ -44,7 +44,6 @@ RSpec.describe Task, type: :model do
     task = FactoryBot.create(:task, assignee_user_id: user.id, assigner_user_id: admin.id)
     category = FactoryBot.create(:task_category)
     task.categories << category
-
     expect(task.categories).to include(category)
   end
 
