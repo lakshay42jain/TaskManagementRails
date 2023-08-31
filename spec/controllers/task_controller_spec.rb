@@ -52,16 +52,18 @@ RSpec.describe Api::V1::TaskController, type: :controller do
 
   context 'PUT Update' do 
     it 'update task if user is admin' do 
+      task = FactoryBot.create(:task)
       @request.headers['Authorization'] = admin.auth_token
-      params = { task: { title: 'title', description: 'description', due_date: Date.today + 7.days, assignee_user_id: user.id, assigner_user_id: admin.id } }
-      post :create, params: params
+      params = { id: task.id, task: { title: 'title_updated' } }
+      patch :update, params: params
       expect(response).to have_http_status(:ok)
     end
 
     it 'update task if user is not admin' do 
+      task = FactoryBot.create(:task)
       @request.headers['Authorization'] = user.auth_token
-      params = { task: { title: 'title', description: 'description', due_date: Date.today + 7.days, assignee_user_id: user.id, assigner_user_id: admin.id } }
-      post :create, params: params
+      params = { id: task.id, task: { title: 'title_updated' } }
+      patch :update, params: params
       expect(response).to have_http_status(:unauthorized)
     end
   end

@@ -2,14 +2,13 @@ require 'rails_helper'
 
 RSpec.describe TaskCategoryService do
   let(:service) { TaskCategoryService.new }
-  let!(:task_category) { FactoryBot.create(:task_category) }
+  let(:task_category) { FactoryBot.create(:task_category) }
 
   context 'find_all' do
     it 'returns a list of all task categories' do
-      FactoryBot.create(:task_category, name: 'catA')
-      FactoryBot.create(:task_category, name: 'catB')
+      FactoryBot.create_list(:task_category, 3)
       task_categories = service.find_all
-      expect(task_categories.size).to eq(3)
+      expect(task_categories.count).to eq(3)
     end
   end
 
@@ -44,10 +43,10 @@ RSpec.describe TaskCategoryService do
 
   context 'when task category Updated' do
     it 'updates the task category' do
-      task_category = FactoryBot.create(:task_category, name: 'Newname')
+      category = FactoryBot.create(:task_category)
       params = { name: 'Updated Category', description: 'Updated description' }
-      service.update(task_category.id, params)
-      updated_category = TaskCategory.find(task_category.id)
+      service.update(category.id, params)
+      updated_category = TaskCategory.find(category.id)
       expect(updated_category.name).to eq(params[:name])
     end
 

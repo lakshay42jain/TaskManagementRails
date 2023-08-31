@@ -75,4 +75,5 @@ group :test do
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'database_cleaner'
+  gem 'shoulda-matchers'
 end
