@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe TaskService do
   let(:user) { FactoryBot.create(:user) }
   let(:admin) { FactoryBot.create(:user, role: 0, email: 'admin@gmail.com') }
-  let!(:task_1) { Task.create(title: 'task1', description: 'description', due_date: '20/12/2024', assignee_user_id: user.id, assigner_user_id: admin.id) }
-  let!(:task_2) { Task.create(title: 'task2', description: 'description', due_date: '20/12/2024', assignee_user_id: user.id, assigner_user_id: admin.id) }
+  let!(:task_1) { FactoryBot.create(:task, title: 'task1', assignee_user_id: user.id, assigner_user_id: admin.id) }
+  let!(:task_2) { FactoryBot.create(:task, title: 'task2', assignee_user_id: user.id, assigner_user_id: admin.id) }
   let(:category) { FactoryBot.create(:task_category) }
 
   context 'for creating a task' do
