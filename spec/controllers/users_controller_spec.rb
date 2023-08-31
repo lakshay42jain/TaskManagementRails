@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::UsersController, type: :controller do
-  let!(:user) { FactoryBot.create(:user) }
+  let!(:user) { FactoryBot.create(:user, email: 'user@email.com') }
   let!(:admin) { FactoryBot.create(:user, role: 0, email: 'admin@gmail.com') }
 
   context 'POST Create' do
@@ -39,5 +39,21 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       post :login, params: params
       expect(response).to have_http_status(:unauthorized)
     end
-    
+  end
+
+  context 'GET index' do
+    it 'returns a list of users when user is admin' do
+      FactoryBot.create(:user)
+      @request.headers['Authorization'] = admin.auth_token
+      get :index
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'unauthorised error when user is not admin' do
+      FactoryBot.create(:user)
+      @request.headers['Authorization'] = user.auth_token
+      get :index
+      expect(response).to have_http_status(:unauthorized)
+    end
+  end
 end

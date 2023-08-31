@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe Task, type: :model do
   let(:user) { FactoryBot.create(:user) }
   let(:admin) { FactoryBot.create(:user, role: 0, email: 'admin@gmail.com') }
+  let(:task) { FactoryBot.create(:task, assigner_user_id: admin.id)}
 
   it 'assigns default category before creation' do
     task = FactoryBot.create(:task, assignee_user_id: user.id, assigner_user_id: admin.id)

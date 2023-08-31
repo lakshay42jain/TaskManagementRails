@@ -1,5 +1,5 @@
 class Api::V1::TaskController < ApplicationController
-  before_action :require_admin, only: [:delete, :update, :find_by_category]
+  before_action :require_admin, only: [:create, :delete, :update, :find_by_category]
 
   def create
     service = TaskService.new

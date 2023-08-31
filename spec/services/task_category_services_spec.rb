@@ -21,6 +21,7 @@ RSpec.describe TaskCategoryService do
     end
 
     it 'already exists with same name' do
+      FactoryBot.create(:task_category, name: 'name')
       params = { name: 'name', description: 'Category description' }
       service.create(params)
       expect(service.errors).to eq('Task Category Already Exists with this name')

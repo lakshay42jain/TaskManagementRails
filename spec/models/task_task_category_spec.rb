@@ -4,8 +4,8 @@ RSpec.describe TaskTaskCategory, type: :model do
   let(:user) { FactoryBot.create(:user) }
   let(:admin) { FactoryBot.create(:user, role: 0, email: 'admin@gmail.com') }
   let(:category) { FactoryBot.create(:task_category) }
-  let(:task) { Task.create(title: 'task', description: 'description', due_date: '20/12/2024', assignee_user_id: user.id, assigner_user_id: admin.id) }
-
+  let(:task) { FactoryBot.create(:task, assigner_user_id: admin.id)}
+ 
   it 'belongs to a task' do
     task_task_category = FactoryBot.create(:task_task_category, task_id: task.id, task_category_id: category.id)
     expect(task_task_category.task).to eq(task)

@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :task_comment do
-    body { 'body' }
-    user_id { nil }
-    task_id { nil }
+    body { Faker::Lorem.word }
+    user_id { FactoryBot.create(:user).id  }
+    task_id { FactoryBot.create(:task).id  }
   end
 end
