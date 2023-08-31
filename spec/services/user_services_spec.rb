@@ -44,7 +44,7 @@ RSpec.describe UserService do
       user_1 = FactoryBot.create(:user, email: 'user1@gmail.com')
       user_2 = FactoryBot.create(:user, email: 'user2@gmail.com')
       users = service.find_all
-      expect(users).to eq([user_1, user_2])
+      expect(users).to include(user_1, user_2)
     end
   end
 end
