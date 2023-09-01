@@ -17,7 +17,7 @@ class Api::V1::TaskCategoryController < ApplicationController
     if service.errors.present?
       render json: { success: false, error: service.errors }, status: :unprocessable_entity
     else
-      render json: { success: true, message: 'Task Category Successfully Deleted' }, status: :created
+      render json: { success: true, message: 'Task Category Successfully Deleted' }, status: :ok
     end
   end
 
@@ -27,7 +27,7 @@ class Api::V1::TaskCategoryController < ApplicationController
     if service.errors.present?
       render json: { success: false, error: service.errors }, status: :unprocessable_entity
     else
-      render json: { success: true, data: TaskCategorySerializer.new(category), message: 'Task Category Successfully Updated' }, status: :created
+      render json: { success: true, data: TaskCategorySerializer.new(category), message: 'Task Category Successfully Updated' }, status: :ok
     end
   end
 

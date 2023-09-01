@@ -1,6 +1,14 @@
 class UserService
   attr_accessor :errors
 
+  def create (user_params)
+    user = User.new(user_params)
+    unless user.save 
+      self.errors = user.errors.full_messages.join(", ")
+    end
+    user if self.errors.blank?
+  end
+
   def deactivate_user(email)
     user = User.find_by(email: email)
     if user && user&.active == false
