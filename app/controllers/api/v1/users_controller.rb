@@ -3,11 +3,12 @@ class Api::V1::UsersController < ApplicationController
   before_action :require_admin, only: [:deactivate, :index]
 
   def create
-    user = User.create(user_params)
-    if user.errors.blank?
+    service = UserService.new 
+    user = service.create(user_params)
+    if service.errors.present? 
+      render json: { success: false, error: service.errors }, status: :unprocessable_entity
+    else 
       render json: { success: true, token: user.auth_token }, status: :created
-    else
-      render json: { success: false, error: user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -27,7 +28,7 @@ class Api::V1::UsersController < ApplicationController
     if service.errors.present?
       render json: { success: false, error: service.errors }, status: :unprocessable_entity
     else
-      render json: { success: true, message: 'User Deactivated Successfully' }, status: :created
+      render json: { success: true, message: 'User Deactivated Successfully' }, status: :ok
     end
   end
 

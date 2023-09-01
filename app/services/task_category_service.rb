@@ -24,7 +24,7 @@ class TaskCategoryService
         self.errors = task_category.errors.full_messages.join(", ")
       end
     else
-      self.errors = 'Taskcategory not Exist With this name'
+      self.errors = 'Taskcategory not found'
     end
   end
 
@@ -35,7 +35,7 @@ class TaskCategoryService
         self.errors = task_category.errors.full_messages.join(", ")
       end
     else
-      self.errors = 'Taskcategory not Exist With this name'
+      self.errors = 'Taskcategory not found'
     end
     task_category if self.errors.blank?
   end

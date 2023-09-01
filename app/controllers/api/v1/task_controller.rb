@@ -7,7 +7,7 @@ class Api::V1::TaskController < ApplicationController
     if service.errors.present?
       render json: { success: false, error: service.errors }, status: :unprocessable_entity
     else
-      render json: { success: true, message: 'Task Assigned Successfully' }, status: 200
+      render json: { success: true, message: 'Task Assigned Successfully' }, status: :created
     end
   end
 
@@ -17,7 +17,7 @@ class Api::V1::TaskController < ApplicationController
     if service.errors.present?
       render json: { success: false, error: service.errors }, status: :unprocessable_entity
     else
-      render json: { success: true, message: 'Task Deleted Successfully' }, status: 200
+      render json: { success: true, message: 'Task Deleted Successfully' }, status: :ok
     end
   end
 
@@ -38,7 +38,7 @@ class Api::V1::TaskController < ApplicationController
     if service.errors.present?
       render json: { success: false, error: service.errors }, status: :unprocessable_entity
     else
-      render json: { success: true, data: TaskSerializer.new(task), message: 'Task Updated Successfully' }, status: 200
+      render json: { success: true, data: TaskSerializer.new(task), message: 'Task Updated Successfully' }, status: :ok
     end
   end
 
@@ -48,7 +48,7 @@ class Api::V1::TaskController < ApplicationController
     if service.errors.present?
       render json: { success: false, error: service.errors }, status: :unprocessable_entity
     else
-      render json: { success: true, data: TaskSerializer.new(task), message: 'Status Updated' }, status: 200
+      render json: { success: true, data: TaskSerializer.new(task), message: 'Status Updated' }, status: :ok
     end
   end
 
