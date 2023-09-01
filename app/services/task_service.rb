@@ -2,12 +2,10 @@ class TaskService
   attr_accessor :errors
 
   def create(user, task_params)
-    begin 
-      task = Task.new(task_params)
-      task.assigner_user_id = user.id 
-      task.save!
-    rescue ActiveRecord::RecordInvalid => error
-      self.errors = error
+    task = Task.new(task_params)
+    task.assigner_user_id = user.id 
+    unless task.save 
+      self.errors = task.errors.full_messages.join(", ")
     end
   end
 

@@ -18,7 +18,7 @@ RSpec.describe Api::V1::TaskCategoryController, type: :controller do
       FactoryBot.create(:task_category, name: 'dummy_cat')
       @request.headers['Authorization'] = admin.auth_token
       delete :delete, params: { name: 'dummy_cat' }
-      expect(response).to have_http_status(:created)
+      expect(response).to have_http_status(:ok)
     end
 
     it 'delete category if user is not admin' do 
@@ -34,7 +34,7 @@ RSpec.describe Api::V1::TaskCategoryController, type: :controller do
       @request.headers['Authorization'] = admin.auth_token
       valid_params = { id: category.id, task_category: { name: 'Updated Category', description: 'Updated Desc' } }
       patch :update, params: valid_params
-      expect(response).to have_http_status(:created)
+      expect(response).to have_http_status(:ok)
       category.reload
       expect(category.name).to eq('Updated Category')
     end

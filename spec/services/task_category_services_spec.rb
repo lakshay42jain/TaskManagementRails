@@ -37,7 +37,7 @@ RSpec.describe TaskCategoryService do
 
     it 'not Exists' do
       service.delete_all('NonexistentCategory')
-      expect(service.errors).to eq('Taskcategory not Exist With this name')
+      expect(service.errors).to eq('Taskcategory not found')
     end
   end
 
@@ -53,7 +53,7 @@ RSpec.describe TaskCategoryService do
     it 'not Exists' do
       params = { name: 'Updated Category', description: 'Updated description' }
       service.update(999, params)
-      expect(service.errors).to eq('Taskcategory not Exist With this name')
+      expect(service.errors).to eq('Taskcategory not found')
     end
   end
 end

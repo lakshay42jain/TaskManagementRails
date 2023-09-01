@@ -3,7 +3,7 @@ class Api::V1::TaskController < ApplicationController
 
   def create
     service = TaskService.new
-    result = service.create(current_user, task_params)
+    service.create(current_user, task_params)
     if service.errors.present?
       render json: { success: false, error: service.errors }, status: :unprocessable_entity
     else

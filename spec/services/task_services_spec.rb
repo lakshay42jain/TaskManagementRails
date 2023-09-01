@@ -17,7 +17,7 @@ RSpec.describe TaskService do
     it 'handles errors and sets errors attribute' do
       task_params = { title: 'Test Task', description: 'dd', assignee_user_id: 12, due_date: "23/08/2024" } 
       service.create(admin, task_params)
-      expect(service.errors).to be_an_instance_of(ActiveRecord::RecordInvalid)
+      expect(service.errors).to eq('Assignee must exist')
     end
   end
 

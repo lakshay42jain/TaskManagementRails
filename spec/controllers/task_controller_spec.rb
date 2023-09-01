@@ -9,7 +9,7 @@ RSpec.describe Api::V1::TaskController, type: :controller do
       @request.headers['Authorization'] = admin.auth_token
       params = { task: { title: 'title', description: 'description', due_date: Date.today + 7.days, assignee_user_id: user.id, assigner_user_id: admin.id } }
       post :create, params: params
-      expect(response).to have_http_status(:ok)
+      expect(response).to have_http_status(:created)
     end
 
     it 'create task if user is not admin' do 

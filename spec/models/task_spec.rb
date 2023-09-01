@@ -37,21 +37,21 @@ RSpec.describe Task, type: :model do
 
   context 'wrong attributes values' do 
     it 'cannot be created with completed status' do
-      task = Task.new(assigner_user_id: admin.id, assignee_user_id: user.id, status: 4)
-      expect(task).not_to be_valid
+      task = FactoryBot.build(:task, assignee_user_id: user.id, assigner_user_id: admin.id, status: 3)
+      expect(task.save).to be_falsey
     end
   
     it 'task not created by normal user' do
-      task = Task.new(assigner_user_id: user.id, assignee_user_id: user.id)
-      expect(task).not_to be_valid
+      task = FactoryBot.build(:task, assignee_user_id: user.id, assigner_user_id: user.id)
+      expect(task.save).to be_falsey
     end
   
     it 'validates due date format and range' do
-      task = Task.new(assigner_user_id: admin.id, assignee_user_id: user.id, due_date: 'invalid_date')
-      expect(task).not_to be_valid
+      task = FactoryBot.build(:task, assignee_user_id: user.id, assigner_user_id: admin.id, due_date: 'invalid_date')
+      expect(task.save).to be_falsey
   
       task.due_date = Date.yesterday
-      expect(task).not_to be_valid
+      expect(task.save).to be_falsey
     end
   end
 
