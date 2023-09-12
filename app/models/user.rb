@@ -12,6 +12,10 @@ class User < ApplicationRecord
   validates :phone_number, presence: true, length: { is: 10 }
   validates :email, presence: true, uniqueness: true, format: { with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i }
 
+  def errors
+    super.tap { |errors| errors.delete(:password, :blank) }
+  end
+
   private def generate_auth_token
     self.auth_token = SecureRandom.hex(32)
   end
