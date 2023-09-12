@@ -1,7 +1,7 @@
 class Task < ApplicationRecord
   before_create :assign_task_category
 
-  enum status: { pending: 1, in_progress: 2, completed: 3 }
+  enum status: { pending: 1, in_progress: 2, completed: 3 , deleted: 4 }
 
   belongs_to :assignee, class_name: 'User', foreign_key: :assignee_user_id
   belongs_to :assigner, class_name: 'User', foreign_key: :assigner_user_id
@@ -10,7 +10,7 @@ class Task < ApplicationRecord
   has_many :task_task_categories, dependent: :destroy
   has_many :categories, through: :task_task_categories, source: :task_category
 
-  validate :admin_validate
+  validate :admin_validate, on: :create
   validate :status_validate, on: :create
   validate :due_date_format_and_range
   validates_presence_of :title, :description, :due_date, :priority, :status
